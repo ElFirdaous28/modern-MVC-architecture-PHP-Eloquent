@@ -1,10 +1,11 @@
 <?php
 
-namespace Core;
+namespace App\Core;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Model extends Eloquent
 {
-    // This class extends Eloquent so all models automatically use it.
+    protected $guarded = ['id']; // Prevent mass assignment of `id`
+    public $timestamps = true;   // Enable timestamps (if your table has `created_at` & `updated_at`)
 }
