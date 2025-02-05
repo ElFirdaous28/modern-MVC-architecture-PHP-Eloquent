@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Core\Model; // Import the base Model class
+use App\Core\Model;
 
 class User extends Model
 {
     protected $table = 'users';
-    protected $fillable = ['name', 'email'];
+    protected $fillable = ['name', 'email', 'password'];
 }
