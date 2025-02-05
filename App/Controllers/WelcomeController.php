@@ -8,6 +8,6 @@ class WelcomeController extends Controller
 {
     public function welcome()
     {
-        $this->view('welcome');
+        $this->view('welcome', ['title' => 'Welcome Page', 'message' => 'Hello, Framework!']);
     }
 }
