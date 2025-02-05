@@ -1,12 +1,12 @@
 <?php
 
-namespace Core;
+namespace App\Core;
+use App\Core\View;
 
 class Controller
 {
     public function view($view, $data = [])
     {
-        extract($data);
-        require_once "../App/Views/$view.php";
+        echo View::render($view, $data);
     }
 }
