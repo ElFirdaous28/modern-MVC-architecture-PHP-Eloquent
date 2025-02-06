@@ -6,3 +6,6 @@ composer.lock
 
 # ignore the config
 /config/config.php
+
+# ignore the .nev file
+.env
