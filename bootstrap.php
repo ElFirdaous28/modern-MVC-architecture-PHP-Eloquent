@@ -11,7 +11,7 @@ $capsule->addConnection([
    'host'      => DB_HOST,
    'database'  => DB_NAME,
    'username'  => DB_USER,
-   'password'  => DB_PASS,
+   'password'  => DB_PASSWORD,
 ]);
 
 $capsule->setAsGlobal();
