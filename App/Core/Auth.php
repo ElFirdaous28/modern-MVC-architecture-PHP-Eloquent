@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Core\View;
 use App\Models\User;
 use App\Core\Session;
 
@@ -13,8 +14,6 @@ class Auth
 
         if ($user) {
             if (password_verify($password, $user->password)) {
-                self::setLoginSessions($user);
-                self::userRedirect($user->role);
                 return $user;
             } else {
                 Session::set('login_password_error', 'Wrong password!');
