@@ -9,6 +9,12 @@
 
 <body>
     <h2>Sign Up</h2>
+
+    <?php if (isset($_SESSION['register_error'])) : ?>
+        <p style="color: red;"><?= $_SESSION['register_error']; ?></p>
+        <?php unset($_SESSION['register_error']); ?>
+    <?php endif; ?>
+
     <form action="/handleRegister" method="POST">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>

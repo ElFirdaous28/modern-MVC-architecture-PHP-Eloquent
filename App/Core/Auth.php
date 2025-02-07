@@ -1,8 +1,9 @@
 <?php
-// auth file
-namespace Core;
+
+namespace App\Core;
 
 use App\Models\User;
+use App\Core\Session;
 
 class Auth
 {
@@ -10,21 +11,46 @@ class Auth
     {
         $user = User::where('email', $email)->first();
 
-        if ($user && password_verify($password, $user->password)) {
-            $_SESSION['user_id'] = $user->id;
-            return true;
+        if ($user) {
+            if (password_verify($password, $user->password)) {
+                self::setLoginSessions($user);
+                self::userRedirect($user->role);
+                return $user;
+            } else {
+                Session::set('login_password_error', 'Wrong password!');
+            }
+        } else {
+            Session::set('login_email_error', 'This email does not exist!');
         }
-        return false;
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
-    public static function user()
+    public static function setLoginSessions($user)
     {
-        return isset($_SESSION['user_id']) ? User::find($_SESSION['user_id']) : null;
+        Session::set('user_logged_in_id', $user->id);
+        Session::set('user_logged_in_name', $user->name);
+        Session::set('user_logged_in_email', $user->email);
+        Session::set('user_logged_in_role', $user->role ?? 'user');
+    }
+
+    public static function userRedirect($role)
+    {
+        if ($role === 'admin') {
+            header('Location: /admin/home');
+        } else {
+            header('Location: /user/home');
+        }
+        exit;
     }
 
     public static function logout()
     {
-        unset($_SESSION['user_id']);
+        session_unset('user_logged_in_id');
+        session_unset('user_logged_in_name');
+        session_unset('user_logged_in_email');
+        session_unset('user_logged_in_role');
+
         session_destroy();
     }
 }
