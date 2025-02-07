@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Core\Session;
+use App\Core\Security;
+// use App\Core\Session;
+
 use App\Models\User;
 
 class AuthController extends Controller
@@ -18,7 +21,7 @@ class AuthController extends Controller
     // methode to handle register
     public function handleRegister()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && Security::validateCSRFToken($_POST['csrf_token'])) {
             $name = trim($_POST['name']);
             $email = trim($_POST['email']);
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -55,7 +58,7 @@ class AuthController extends Controller
     // methode to handle login
     public function handleLogin()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && Security::validateCSRFToken($_POST['csrf_token'])) {
             $email = trim($_POST['email']);
             $password = $_POST['password'];
 

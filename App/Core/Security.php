@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace App\Core;
 
 class Security
 {
@@ -10,7 +10,7 @@ class Security
         if (empty($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Create a random token
         }
-        return $_SESSION['csrf_token']; // Return the token for embedding in forms
+        return $_SESSION['csrf_token'];
     }
 
     public static function validateCSRFToken($token)
