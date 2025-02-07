@@ -4,18 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Register</title>
 </head>
 
 <body>
     <h2>Sign Up</h2>
-
-    <?php if (isset($_SESSION['register_error'])) : ?>
-        <p style="color: red;"><?= $_SESSION['register_error']; ?></p>
-        <?php unset($_SESSION['register_error']); ?>
-    <?php endif; ?>
-
     <form action="/handleRegister" method="POST">
+        <!-- CSRF Token -->
+        @csrf
+
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
         <br><br>
