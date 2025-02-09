@@ -45,11 +45,7 @@ class Auth
 
     public static function logout()
     {
-        session_unset('user_logged_in_id');
-        session_unset('user_logged_in_name');
-        session_unset('user_logged_in_email');
-        session_unset('user_logged_in_role');
-
         session_destroy();
+        header("Location: /login");
     }
 }
