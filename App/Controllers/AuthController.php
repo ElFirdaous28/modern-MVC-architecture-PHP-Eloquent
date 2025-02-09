@@ -57,7 +57,7 @@ class AuthController extends Controller
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
-                    'password' => $password,
+                    'password' => password_hash($password,PASSWORD_DEFAULT),
                     'role' => $role
                 ]);
 
@@ -88,5 +88,9 @@ class AuthController extends Controller
                 Auth::userRedirect($user->role);
             }
         }
+    }
+
+    public function logout(){
+        Auth::logout();
     }
 }
