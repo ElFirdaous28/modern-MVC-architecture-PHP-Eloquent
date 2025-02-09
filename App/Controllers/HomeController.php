@@ -13,10 +13,10 @@ class HomeController extends Controller
 
     public function adminHome()
     {
-        $this->view('Admin/AdminHome');
+        $this->view('Admin/AdminHome',['username'=>$_SESSION['user_logged_in_name']]);
     }
     public function userHome()
     {
-        $this->view('User/UserHome');
+        $this->view('User/UserHome',['username'=>$_SESSION['user_logged_in_name']]);
     }
 }

@@ -14,22 +14,15 @@
             <h2 class="text-center font-semibold text-3xl lg:text-4xl text-gray-800">Login</h2>
             <form class="mt-10" action="/handleLogin" method="POST">
                 <!-- CSRF Token -->
-                @csrf
+                {{ csrf() }}
 
                 <label for="email" class="block text-xs font-semibold text-gray-600 uppercase">E-mail</label>
                 <input id="email" type="email" name="email" placeholder="e-mail address" autocomplete="email" class="block w-full py-3 px-1 mt-2 text-gray-800 appearance-none border-b-2 border-gray-100 focus:text-gray-500 focus:outline-none focus:border-gray-200" />
-                <?php if (isset($_SESSION['login_email_error'])): ?>
-                    <div class="text-red-500 text-sm text-center mt-4"><?= $_SESSION['login_email_error']; ?></div>
-                    <?php unset($_SESSION['login_email_error']); ?>
-                <?php endif; ?>
-
+                {{ error('email')|raw }}
 
                 <label for="password" class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Password</label>
                 <input id="password" type="password" name="password" placeholder="password" autocomplete="current-password" class="block w-full py-3 px-1 mt-2 mb-4 text-gray-800 appearance-none border-b-2 border-gray-100 focus:text-gray-500 focus:outline-none focus:border-gray-200" />
-                <?php if (isset($_SESSION['login_password_error'])): ?>
-                    <div class="text-red-500 text-sm text-center mt-4"><?= $_SESSION['login_password_error']; ?></div>
-                    <?php unset($_SESSION['login_password_error']); ?>
-                <?php endif; ?>
+                {{ error('password')|raw }}
 
 
                 <button type="submit" class="w-full py-3 mt-10 bg-gray-800 rounded-sm font-medium text-white uppercase focus:outline-none hover:bg-gray-700 hover:shadow-none">Login</button>

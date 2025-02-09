@@ -16,10 +16,10 @@ class Auth
             if (password_verify($password, $user->password)) {
                 return $user;
             } else {
-                Session::set('login_password_error', 'Wrong password!');
+                Session::set('errors', ['password','Wrong password!']);
             }
         } else {
-            Session::set('login_email_error', 'This email does not exist!');
+            Session::set('errors', ['email','This email does not exist!']);
         }
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit;

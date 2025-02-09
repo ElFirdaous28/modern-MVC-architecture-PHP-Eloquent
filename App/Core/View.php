@@ -2,17 +2,51 @@
 
 namespace App\Core;
 
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+
 class View
 {
+    private static $twig;
+
+    public static function initialize()
+    {
+        $loader = new FilesystemLoader('../App/Views');
+        self::$twig = new Environment($loader, [
+            'cache' => '../cache',
+            'auto_reload' => true // Useful during development
+        ]);
+
+        // Add CSRF function to Twig
+        self::$twig->addFunction(new \Twig\TwigFunction('csrf', function () {
+            return '<input type="hidden" name="csrf_token" value="' . Security::generateCSRFToken() . '">';
+        }, ['is_safe' => ['html']]));
+
+        // Add error function
+        self::$twig->addFunction(new \Twig\TwigFunction('error', function ($field) {
+            if (isset($_SESSION['errors'][$field])) {
+                $error = $_SESSION['errors'][$field];
+                unset($_SESSION['errors'][$field]);
+                return "<div class='text-red-500 text-xs mt-1'>$error</div>";
+            }
+            return '';
+        }, ['is_safe' => ['html']]));
+    }
+
     public static function render($view, $data = [])
     {
-        extract($data);
+        if (!self::$twig) {
+            self::initialize();
+        }
 
-        ob_start();
-        require_once "../App/Views/$view.php";
-        $templateContent = ob_get_clean();
-        $templateContent = str_replace('@csrf', '<input type="hidden" name="csrf_token" value="' . Security::generateCSRFToken() . '">', $templateContent);
+        // Change .php extension to .twig
+        $template = str_replace('.php', '.twig', $view);
 
-        echo $templateContent;
+        try {
+            echo self::$twig->render($template . '.php', $data);
+        } catch (\Exception $e) {
+            // Handle template errors appropriately
+            throw new \Exception("Error rendering template: " . $e->getMessage());
+        }
     }
 }

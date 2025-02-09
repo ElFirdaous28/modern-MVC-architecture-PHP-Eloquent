@@ -48,7 +48,7 @@ class AuthController extends Controller
                 header("Location: /register");
             } else {
                 if (User::where('email', $email)->exists()) {
-                    Session::set('register_error', 'This email is already registered!');
+                    Session::set('errors', ['email' => 'This email is already registered!']);
                     header("Location: " . $_SERVER['HTTP_REFERER']);
                     exit;
                 }
@@ -57,7 +57,7 @@ class AuthController extends Controller
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
-                    'password' => password_hash($password,PASSWORD_DEFAULT),
+                    'password' => password_hash($password, PASSWORD_DEFAULT),
                     'role' => $role
                 ]);
 
@@ -65,7 +65,6 @@ class AuthController extends Controller
                 Auth::userRedirect($user->role);
             }
         } else {
-            Session::set('register_error', 'Invalid request.');
             header('Location: /register');
             exit;
         }
@@ -82,15 +81,32 @@ class AuthController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && Security::validateCSRFToken($_POST['csrf_token'])) {
             $email = trim($_POST['email']);
             $password = $_POST['password'];
-            $user = Auth::login($email, $password);
-            if ($user) {
-                Auth::setLoginSessions($user);
-                Auth::userRedirect($user->role);
+            $rules = [
+                'email' => 'required|email',
+                'password' => 'required|min:8'
+            ];
+
+            $data = [
+                'email' => $email,
+                'password' => $password
+            ];
+
+            $errors = Validator::validate($data, $rules);
+            if (!empty($errors)) {
+                Session::set("errors", $errors);
+                header("Location: /login");
+            } else {
+                $user = Auth::login($email, $password);
+                if ($user) {
+                    Auth::setLoginSessions($user);
+                    Auth::userRedirect($user->role);
+                }
             }
         }
     }
 
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
     }
 }
