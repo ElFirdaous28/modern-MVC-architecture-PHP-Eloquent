@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Core\View;
 use App\Models\User;
 use App\Core\Session;
 
@@ -13,14 +14,12 @@ class Auth
 
         if ($user) {
             if (password_verify($password, $user->password)) {
-                self::setLoginSessions($user);
-                self::userRedirect($user->role);
                 return $user;
             } else {
-                Session::set('login_password_error', 'Wrong password!');
+                Session::set('errors', ['password','Wrong password!']);
             }
         } else {
-            Session::set('login_email_error', 'This email does not exist!');
+            Session::set('errors', ['email','This email does not exist!']);
         }
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit;
@@ -46,11 +45,7 @@ class Auth
 
     public static function logout()
     {
-        session_unset('user_logged_in_id');
-        session_unset('user_logged_in_name');
-        session_unset('user_logged_in_email');
-        session_unset('user_logged_in_role');
-
         session_destroy();
+        header("Location: /login");
     }
 }
